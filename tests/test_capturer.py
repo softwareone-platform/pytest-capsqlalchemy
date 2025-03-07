@@ -18,25 +18,25 @@ async def test_assert_query_count(db_session: AsyncSession, capsqlalchemy: SQLAl
 
         db_session.add(Order(recipient="John Doe"))
 
-    capsqlalchemy.assert_query_count(9, include_transaction_queries=True)
-    capsqlalchemy.assert_query_count(5, include_transaction_queries=False)
+    capsqlalchemy.assert_query_count(9, include_tcl=True)
+    capsqlalchemy.assert_query_count(5, include_tcl=False)
 
 
 async def test_changing_context(db_session: AsyncSession, capsqlalchemy: SQLAlchemyCapturer) -> None:
     await db_session.execute(text("SELECT 1"))
 
-    capsqlalchemy.assert_query_count(1, include_transaction_queries=False)
+    capsqlalchemy.assert_query_count(1, include_tcl=False)
 
     await db_session.execute(text("SELECT 1"))
 
-    capsqlalchemy.assert_query_count(2, include_transaction_queries=False)
+    capsqlalchemy.assert_query_count(2, include_tcl=False)
 
     with capsqlalchemy:
-        capsqlalchemy.assert_query_count(0, include_transaction_queries=False)
+        capsqlalchemy.assert_query_count(0, include_tcl=False)
         await db_session.execute(text("SELECT 1"))
-        capsqlalchemy.assert_query_count(1, include_transaction_queries=False)
+        capsqlalchemy.assert_query_count(1, include_tcl=False)
 
-    capsqlalchemy.assert_query_count(3, include_transaction_queries=False)
+    capsqlalchemy.assert_query_count(3, include_tcl=False)
 
 
 async def test_captured_queries(db_session: AsyncSession, capsqlalchemy: SQLAlchemyCapturer) -> None:
@@ -69,7 +69,7 @@ async def test_captured_queries(db_session: AsyncSession, capsqlalchemy: SQLAlch
         "SELECT orders.id, orders.recipient \nFROM orders \nWHERE orders.id = :id_1",
         "SELECT 1",
         "INSERT INTO orders (recipient) VALUES (:recipient)",
-        include_transaction_queries=False,
+        include_tcl=False,
     )
 
 
@@ -126,7 +126,7 @@ async def test_captured_query_types(db_session: AsyncSession, capsqlalchemy: SQL
         SQLExpressionType.SELECT,
         SQLExpressionType.SELECT,
         SQLExpressionType.INSERT,
-        include_transaction_queries=False,
+        include_tcl=False,
     )
 
 
@@ -146,7 +146,7 @@ async def test_captured_queries_insert_with_relationship(
             "(:item_name_m0, :price_m0, :order_id_m0), "
             "(:item_name_m1, :price_m1, :order_id_m1)"
         ),
-        include_transaction_queries=False,
+        include_tcl=False,
     )
 
     capsqlalchemy.assert_captured_queries(
@@ -156,6 +156,6 @@ async def test_captured_queries_insert_with_relationship(
             f"('Bread', 2.0, {order.id}), "
             f"('Butter', 3.5, {order.id})"
         ),
-        include_transaction_queries=False,
+        include_tcl=False,
         bind_params=True,
     )

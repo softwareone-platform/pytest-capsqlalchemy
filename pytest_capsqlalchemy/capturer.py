@@ -60,12 +60,12 @@ class SQLAlchemyCapturer:
     def assert_query_types(
         self,
         *expected_query_types: SQLExpressionType | str,
-        include_transaction_queries: bool = True,
+        include_tcl: bool = True,
     ) -> None:
         actual_query_types_values = []
 
         for query in self.captured_expressions:
-            if not include_transaction_queries and query.type.is_tcl:
+            if not include_tcl and query.type.is_tcl:
                 continue
 
             actual_query_types_values.append(query.type._value_)
@@ -82,12 +82,12 @@ class SQLAlchemyCapturer:
         self,
         expected_query_count: int,
         *,
-        include_transaction_queries: bool = True,
+        include_tcl: bool = True,
     ) -> None:
         actual_query_count = 0
 
         for query in self.captured_expressions:
-            if not include_transaction_queries and query.type.is_tcl:
+            if not include_tcl and query.type.is_tcl:
                 continue
 
             actual_query_count += 1
@@ -99,13 +99,13 @@ class SQLAlchemyCapturer:
     def assert_captured_queries(
         self,
         *expected_queries: str,
-        include_transaction_queries: bool = True,
+        include_tcl: bool = True,
         bind_params: bool = False,
     ) -> None:
         actual_queries = []
 
         for query in self.captured_expressions:
-            if not include_transaction_queries and query.type.is_tcl:
+            if not include_tcl and query.type.is_tcl:
                 continue
 
             actual_queries.append(query.get_sql(bind_params=bind_params))
