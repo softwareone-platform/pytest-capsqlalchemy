@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !env.ACT }}
         with:
-          name: coverage-report
+          name: coverage-report-${{ matrix.python-version }}
           path: htmlcov
           retention-days: 10
 
