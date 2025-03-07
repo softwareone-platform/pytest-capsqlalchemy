@@ -7,11 +7,9 @@ edit_uri: edit/main/docs/
 repo_name: softwareone-platform/pytest-capsqlalchemy
 copyright: <a href="https://softwareone.com">SoftwareOne</a>
 
-# TODO: Check out the recepies here: https://mkdocstrings.github.io/recipes/
-#       there are also plugins mentioned there to automatically generate docs pages
 nav:
   - Home: index.md
-  - Modules: modules.md
+  - "API Reference": api-reference.md
 plugins:
   - search
   - mkdocstrings:
