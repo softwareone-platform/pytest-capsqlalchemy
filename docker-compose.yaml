@@ -1,0 +1,19 @@
+services:
+  test_postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${TEST_POSTGRES_DB}"
+      POSTGRES_USER: "${TEST_POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${TEST_POSTGRES_PASSWORD}"
+    ports:
+      - "${TEST_POSTGRES_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname=$${TEST_POSTGRES_DB} --username=$${TEST_POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    tmpfs:
+      - /var/lib/postgresql/data
+    env_file:
+      - .env
