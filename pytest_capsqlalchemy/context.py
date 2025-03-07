@@ -44,16 +44,16 @@ class SQLAlchemyCaptureContext:
     def clear(self) -> None:
         self._captured_expressions = []
 
-    def on_begin(self, conn: Connection) -> None:
+    def _on_begin(self, conn: Connection) -> None:
         self._captured_expressions.append(SQLExpression(executable=text("BEGIN")))
 
-    def on_commit(self, conn: Connection) -> None:
+    def _on_commit(self, conn: Connection) -> None:
         self._captured_expressions.append(SQLExpression(executable=text("COMMIT")))
 
-    def on_rollback(self, conn: Connection) -> None:
+    def _on_rollback(self, conn: Connection) -> None:
         self._captured_expressions.append(SQLExpression(executable=text("ROLLBACK")))
 
-    def on_after_execute(
+    def _on_after_execute(
         self,
         conn: Connection,
         clauseelement: Executable,
@@ -70,10 +70,10 @@ class SQLAlchemyCaptureContext:
         events_stack = self._sqlaclhemy_events_stack.__enter__()
 
         for event_name, listener in (
-            ("begin", self.on_begin),
-            ("commit", self.on_commit),
-            ("rollback", self.on_rollback),
-            ("after_execute", self.on_after_execute),
+            ("begin", self._on_begin),
+            ("commit", self._on_commit),
+            ("rollback", self._on_rollback),
+            ("after_execute", self._on_after_execute),
         ):
             events_stack.enter_context(
                 temp_sqlalchemy_event(
