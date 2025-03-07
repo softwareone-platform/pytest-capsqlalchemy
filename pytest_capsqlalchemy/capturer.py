@@ -32,6 +32,17 @@ class SQLAlchemyCapturer:
 
     @property
     def captured_expressions(self) -> list[SQLExpression]:
+        """
+        Returns all SQL expressions captured in the current context.
+
+        When used outside a context manager block, returns all expressions captured
+        during the entire test. When used inside a context manager block, returns
+        only the expressions captured within that specific block.
+
+        This property is useful for performing specific assertions on the captured expressions which
+        cannot be easily achieved with the provided assert methods.
+        """
+
         if self._partial_context is not None:
             return self._partial_context.captured_expressions
 
@@ -62,6 +73,20 @@ class SQLAlchemyCapturer:
         *expected_query_types: SQLExpressionType | str,
         include_tcl: bool = True,
     ) -> None:
+        """
+        Asserts that the captured SQL expressions match the expected query types in order.
+        This is useful for ensuring that your code is generating correct query types but
+        their exact strcutre is not important (e.g. complex SELECT statements).
+
+        Args:
+            *expected_query_types: Variable number of expected query types
+            include_tcl: Whether to include transaction control language statements (BEGIN,
+                COMMIT, ROLLBACK) in the comparison
+
+        Raises:
+            AssertionError: If the actual query types don't match the expected ones.
+        """
+
         actual_query_types_values = []
 
         for query in self.captured_expressions:
@@ -78,12 +103,20 @@ class SQLAlchemyCapturer:
 
         assert expected_query_types_values == actual_query_types_values
 
-    def assert_query_count(
-        self,
-        expected_query_count: int,
-        *,
-        include_tcl: bool = True,
-    ) -> None:
+    def assert_query_count(self, expected_query_count: int, *, include_tcl: bool = True) -> None:
+        """
+        Asserts that the number of captured SQL expressions matches the expected count.
+        This is useful for ensuring that your code is not generating more statements than expected
+        (e.g. due to N+1 queries), however the exact queries are not important.
+
+        Args:
+            expected_query_count: The expected number of SQL expressions.
+            include_tcl: Whether to include transaction control language statements (BEGIN,
+                COMMIT, ROLLBACK) in the count.
+
+        Raises:
+            AssertionError: If the actual query count doesn't match the expected count.
+        """
         actual_query_count = 0
 
         for query in self.captured_expressions:
@@ -102,6 +135,20 @@ class SQLAlchemyCapturer:
         include_tcl: bool = True,
         bind_params: bool = False,
     ) -> None:
+        """
+        Asserts that the captured SQL queries match the expected SQL strings in order.
+        This is useful for ensuring that your code is generating the exact SQL statements you expect.
+
+        Args:
+            *expected_queries: Variable number of expected SQL query strings.
+            include_tcl: Whether to include transaction control language statements (BEGIN,
+                COMMIT, ROLLBACK) in the comparison.
+            bind_params: Whether to include bound parameters in the SQL strings. When `False`,
+                parameters are represented as placeholders instead.
+
+        Raises:
+            AssertionError: If the actual SQL queries don't match the expected ones.
+        """
         actual_queries = []
 
         for query in self.captured_expressions:
