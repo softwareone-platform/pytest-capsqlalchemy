@@ -29,25 +29,29 @@ class SQLAlchemyCaptureContext:
     See SQLAlchemyCapturer for the available assertions on the captured expressions
     """
 
-    engine: AsyncEngine
-    captured_expressions: list[SQLExpression]
+    _engine: AsyncEngine
+    _captured_expressions: list[SQLExpression]
 
     def __init__(self, engine: AsyncEngine):
-        self.engine = engine
-        self.captured_expressions = []
-        self.sqlalchemy_events_stack = contextlib.ExitStack()
+        self._engine = engine
+        self._captured_expressions = []
+        self._sqlaclhemy_events_stack = contextlib.ExitStack()
+
+    @property
+    def captured_expressions(self) -> list[SQLExpression]:
+        return self._captured_expressions
 
     def clear(self) -> None:
-        self.captured_expressions = []
+        self._captured_expressions = []
 
     def on_begin(self, conn: Connection) -> None:
-        self.captured_expressions.append(SQLExpression(executable=text("BEGIN")))
+        self._captured_expressions.append(SQLExpression(executable=text("BEGIN")))
 
     def on_commit(self, conn: Connection) -> None:
-        self.captured_expressions.append(SQLExpression(executable=text("COMMIT")))
+        self._captured_expressions.append(SQLExpression(executable=text("COMMIT")))
 
     def on_rollback(self, conn: Connection) -> None:
-        self.captured_expressions.append(SQLExpression(executable=text("ROLLBACK")))
+        self._captured_expressions.append(SQLExpression(executable=text("ROLLBACK")))
 
     def on_after_execute(
         self,
@@ -58,12 +62,12 @@ class SQLAlchemyCaptureContext:
         execution_options: Mapping[str, Any],
         result: CursorResult,
     ) -> None:
-        self.captured_expressions.append(
+        self._captured_expressions.append(
             SQLExpression(executable=clauseelement, params=params, multiparams=multiparams)
         )
 
     def __enter__(self) -> Self:
-        events_stack = self.sqlalchemy_events_stack.__enter__()
+        events_stack = self._sqlaclhemy_events_stack.__enter__()
 
         for event_name, listener in (
             ("begin", self.on_begin),
@@ -73,7 +77,7 @@ class SQLAlchemyCaptureContext:
         ):
             events_stack.enter_context(
                 temp_sqlalchemy_event(
-                    self.engine.sync_engine,
+                    self._engine.sync_engine,
                     event_name,
                     listener,
                 )
@@ -87,4 +91,4 @@ class SQLAlchemyCaptureContext:
         exc_value: BaseException | None,
         traceback: TracebackType | None,
     ) -> None | bool:
-        return self.sqlalchemy_events_stack.__exit__(exc_type, exc_value, traceback)
+        return self._sqlaclhemy_events_stack.__exit__(exc_type, exc_value, traceback)

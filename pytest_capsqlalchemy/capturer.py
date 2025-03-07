@@ -19,27 +19,27 @@ class SQLAlchemyCapturer:
     Intended to be used via the [`capsqlalchemy`][pytest_capsqlalchemy.plugin.capsqlalchemy] fixture
     """
 
-    full_test_context: SQLAlchemyCaptureContext
-    partial_context: SQLAlchemyCaptureContext | None
+    _full_test_context: SQLAlchemyCaptureContext
+    _partial_context: SQLAlchemyCaptureContext | None
 
     def __init__(self, full_test_context: SQLAlchemyCaptureContext):
-        self.full_test_context = full_test_context
-        self.partial_context = None
+        self._full_test_context = full_test_context
+        self._partial_context = None
 
     @property
     def engine(self) -> AsyncEngine:
-        return self.full_test_context.engine
+        return self._full_test_context._engine
 
     @property
     def captured_expressions(self) -> list[SQLExpression]:
-        if self.partial_context is not None:
-            return self.partial_context.captured_expressions
+        if self._partial_context is not None:
+            return self._partial_context.captured_expressions
 
-        return self.full_test_context.captured_expressions
+        return self._full_test_context.captured_expressions
 
     def __enter__(self) -> Self:
-        self.partial_context = SQLAlchemyCaptureContext(self.engine)
-        self.partial_context = self.partial_context.__enter__()
+        self._partial_context = SQLAlchemyCaptureContext(self.engine)
+        self._partial_context = self._partial_context.__enter__()
         return self
 
     def __exit__(
@@ -48,12 +48,12 @@ class SQLAlchemyCapturer:
         exc_val: BaseException | None = None,
         exc_tb: TracebackType | None = None,
     ) -> None | bool:
-        if self.partial_context is None:  # pragma: no cover
+        if self._partial_context is None:  # pragma: no cover
             raise RuntimeError(f"{self.__class__.__name__}: attempting to call __exit__ before __enter__")
 
-        result = self.partial_context.__exit__(exc_type, exc_val, exc_tb)
+        result = self._partial_context.__exit__(exc_type, exc_val, exc_tb)
 
-        self.partial_context = None
+        self._partial_context = None
 
         return result
 
