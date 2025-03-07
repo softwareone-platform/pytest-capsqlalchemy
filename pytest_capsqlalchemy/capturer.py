@@ -4,7 +4,7 @@ from typing import Self
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from pytest_capsqlalchemy.context import SQLAlchemyCaptureContext
-from pytest_capsqlalchemy.expression import SQLExpression
+from pytest_capsqlalchemy.expression import SQLExpression, SQLExpressionType
 
 
 class SQLAlchemyCapturer:
@@ -48,7 +48,7 @@ class SQLAlchemyCapturer:
         exc_val: BaseException | None = None,
         exc_tb: TracebackType | None = None,
     ) -> None | bool:
-        if self.partial_context is None:
+        if self.partial_context is None:  # pragma: no cover
             raise RuntimeError(f"{self.__class__.__name__}: attempting to call __exit__ before __enter__")
 
         result = self.partial_context.__exit__(exc_type, exc_val, exc_tb)
@@ -59,18 +59,24 @@ class SQLAlchemyCapturer:
 
     def assert_query_types(
         self,
-        *expected_query_types: str,
+        *expected_query_types: SQLExpressionType | str,
         include_transaction_queries: bool = True,
     ) -> None:
-        actual_query_types = []
+        actual_query_types_values = []
 
         for query in self.captured_expressions:
-            if not include_transaction_queries and query.is_tcl:
+            if not include_transaction_queries and query.type.is_tcl:
                 continue
 
-            actual_query_types.append(query.query_summary)
+            actual_query_types_values.append(query.type._value_)
 
-        assert list(expected_query_types) == actual_query_types
+        # Converting to strings as the error message diff will be shorter and more readable
+        expected_query_types_values = [
+            query_type._value_ if isinstance(query_type, SQLExpressionType) else query_type
+            for query_type in expected_query_types
+        ]
+
+        assert expected_query_types_values == actual_query_types_values
 
     def assert_query_count(
         self,
@@ -81,7 +87,7 @@ class SQLAlchemyCapturer:
         actual_query_count = 0
 
         for query in self.captured_expressions:
-            if not include_transaction_queries and query.is_tcl:
+            if not include_transaction_queries and query.type.is_tcl:
                 continue
 
             actual_query_count += 1
@@ -99,7 +105,7 @@ class SQLAlchemyCapturer:
         actual_queries = []
 
         for query in self.captured_expressions:
-            if not include_transaction_queries and query.is_tcl:
+            if not include_transaction_queries and query.type.is_tcl:
                 continue
 
             actual_queries.append(query.get_sql(bind_params=bind_params))

@@ -41,19 +41,13 @@ class SQLAlchemyCaptureContext:
         self.captured_expressions = []
 
     def on_begin(self, conn: Connection) -> None:
-        self.captured_expressions.append(
-            SQLExpression(executable=text("BEGIN"), params=None, multiparams=None, is_tcl=True)
-        )
+        self.captured_expressions.append(SQLExpression(executable=text("BEGIN")))
 
     def on_commit(self, conn: Connection) -> None:
-        self.captured_expressions.append(
-            SQLExpression(executable=text("COMMIT"), params=None, multiparams=None, is_tcl=True)
-        )
+        self.captured_expressions.append(SQLExpression(executable=text("COMMIT")))
 
     def on_rollback(self, conn: Connection) -> None:
-        self.captured_expressions.append(
-            SQLExpression(executable=text("ROLLBACK"), params=None, multiparams=None, is_tcl=True)
-        )
+        self.captured_expressions.append(SQLExpression(executable=text("ROLLBACK")))
 
     def on_after_execute(
         self,
