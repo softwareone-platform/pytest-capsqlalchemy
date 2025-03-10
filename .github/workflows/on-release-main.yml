@@ -47,10 +47,10 @@ jobs:
       - name: Build package
         run: uv build
 
-      - name: Publish package
-        run: uv publish
-        env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://upload.pypi.org/legacy/
 
   deploy-docs:
     needs: publish
