@@ -1,0 +1,139 @@
+[project]
+name = "pytest-capsqlalchemy"
+version = "0.0.1"
+description = "Pytest plugin to allow capturing SQLAlchemy queries."
+authors = [
+  { name = "Artur Balabanov", email = "artur.balabanov@softwareone.com" },
+]
+readme = "README.md"
+keywords = ['python']
+requires-python = ">=3.9,<4.0"
+license = "Apache-2.0"
+classifiers = [
+  "Intended Audience :: Developers",
+  "Development Status :: 3 - Alpha",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Framework :: AsyncIO",
+  "Framework :: Pytest",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Testing",
+  "Topic :: Database :: Front-Ends",
+  "Typing :: Typed",
+]
+dependencies = ["sqlalchemy[asyncio]>=2.0.38"]
+
+[project.urls]
+Homepage = "https://softwareone-platform.github.io/pytest-capsqlalchemy/"
+Repository = "https://github.com/softwareone-platform/pytest-capsqlalchemy"
+Documentation = "https://softwareone-platform.github.io/pytest-capsqlalchemy/"
+
+[dependency-groups]
+dev = [
+  "pytest>=7.2.0",
+  "pre-commit>=2.20.0",
+  "tox-uv>=1.11.3",
+  "mypy>=0.991",
+  "ruff>=0.9.2",
+  "mkdocs>=1.4.2",
+  "mkdocs-material>=8.5.10",
+  "mkdocstrings[python]>=0.26.1",
+  "asyncpg>=0.30.0",
+  "pytest-asyncio>=0.25.3",
+  "pytest-dotenv>=0.5.2",
+  "pytest-cov>=6.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.setuptools]
+py-modules = ["pytest_capsqlalchemy"]
+
+[tool.mypy]
+files = ["pytest_capsqlalchemy"]
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+addopts = "--cov=pytest_capsqlalchemy --cov-report=term-missing --cov-report=html --cov-report=xml"
+
+[tool.ruff]
+line-length = 120
+fix = true
+
+[tool.ruff.lint]
+select = [
+  # flake8-2020
+  "YTT",
+  # flake8-bandit
+  "S",
+  # flake8-bugbear
+  "B",
+  # flake8-builtins
+  "A",
+  # flake8-comprehensions
+  "C4",
+  # flake8-debugger
+  "T10",
+  # flake8-simplify
+  "SIM",
+  # isort
+  "I",
+  # mccabe
+  "C90",
+  # pycodestyle
+  "E",
+  "W",
+  # pyflakes
+  "F",
+  # pygrep-hooks
+  "PGH",
+  # pyupgrade
+  "UP",
+  # ruff
+  "RUF",
+]
+ignore = [
+  # LineTooLong
+  "E501",
+  # DoNotAssignLambda
+  "E731",
+  # assert
+  "S101",
+]
+
+[tool.ruff.format]
+preview = true
+
+[tool.coverage.run]
+branch = true
+source = ["pytest_capsqlalchemy"]
+relative_files = true
+# SQLAlchemy uses greenlets to pass context, so we need to specify this here,
+# so that the coverage is calculated correctly. 'thread' is the default value,
+# so including it in case some code relies on it
+#
+# refs:
+#     * https://coverage.readthedocs.io/en/7.6.9/config.html#run-concurrency
+#     * https://github.com/nedbat/coveragepy/issues/1082
+concurrency = ["thread", "greenlet"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = ["pragma: no cover", "pragma: no branch", "NotImplementedError"]
