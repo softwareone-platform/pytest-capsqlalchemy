@@ -1,7 +1,13 @@
 import contextlib
+import sys
 from collections.abc import Mapping
 from types import TracebackType
-from typing import Any, Self
+from typing import Any
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 from sqlalchemy import Connection, CursorResult, Executable, text
 from sqlalchemy.ext.asyncio import AsyncEngine
