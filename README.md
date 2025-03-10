@@ -1,8 +1,11 @@
 # pytest-capsqlalchemy
 
+
 [![Release](https://img.shields.io/github/v/release/softwareone-platform/pytest-capsqlalchemy)](https://img.shields.io/github/v/release/softwareone-platform/pytest-capsqlalchemy)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytest-capsqlalchemy)](https://img.shields.io/pypi/pyversions/pytest-capsqlalchemy)
 [![Build status](https://img.shields.io/github/actions/workflow/status/softwareone-platform/pytest-capsqlalchemy/main.yml?branch=main)](https://github.com/softwareone-platform/pytest-capsqlalchemy/actions/workflows/main.yml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/softwareone-platform/pytest-capsqlalchemy/branch/main/graph/badge.svg)](https://codecov.io/gh/softwareone-platform/pytest-capsqlalchemy)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=softwareone-platform_pytest-capsqlalchemy&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=softwareone-platform_pytest-capsqlalchemy)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=softwareone-platform_pytest-capsqlalchemy&metric=coverage)](https://sonarcloud.io/summary/new_code?id=softwareone-platform_pytest-capsqlalchemy)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/softwareone-platform/pytest-capsqlalchemy)](https://img.shields.io/github/commit-activity/m/softwareone-platform/pytest-capsqlalchemy)
 [![License](https://img.shields.io/github/license/softwareone-platform/pytest-capsqlalchemy)](https://img.shields.io/github/license/softwareone-platform/pytest-capsqlalchemy)
 
@@ -69,16 +72,3 @@ The CI/CD pipeline will be triggered when you open a pull request, merge to main
 
 To finalize the set-up for publishing to PyPI, see [here](https://fpgmaas.github.io/cookiecutter-uv/features/publishing/#set-up-for-pypi).
 For activating the automatic documentation with MkDocs, see [here](https://fpgmaas.github.io/cookiecutter-uv/features/mkdocs/#enabling-the-documentation-on-github).
-
-## Releasing a new version
-
-- Create an API Token on [PyPI](https://pypi.org/).
-- Add the API Token to your projects secrets with the name `PYPI_TOKEN` by visiting [this page](https://github.com/softwareone-platform/pytest-capsqlalchemy/settings/secrets/actions/new).
-- Create a [new release](https://github.com/softwareone-platform/pytest-capsqlalchemy/releases/new) on Github.
-- Create a new tag in the form `*.*.*`.
-
-For more details, see [here](https://fpgmaas.github.io/cookiecutter-uv/features/cicd/#how-to-trigger-a-release).
-
----
-
-Repository initiated with [fpgmaas/cookiecutter-uv](https://github.com/fpgmaas/cookiecutter-uv).
