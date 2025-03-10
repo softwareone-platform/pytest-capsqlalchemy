@@ -3,7 +3,7 @@ name = "pytest-capsqlalchemy"
 version = "0.0.1"
 description = "Pytest plugin to allow capturing SQLAlchemy queries."
 authors = [
-  { name = "Artur Balabanov", email = "artur.balabanov@softwareone.com" },
+  { name = "SoftwareOne AG" },
 ]
 readme = "README.md"
 keywords = ['python']
@@ -11,7 +11,7 @@ requires-python = ">=3.9,<4.0"
 license = "Apache-2.0"
 classifiers = [
   "Intended Audience :: Developers",
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
