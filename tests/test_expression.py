@@ -1,3 +1,5 @@
+from typing import Union
+
 import pytest
 from sqlalchemy import Table, delete, insert, select, text, update
 from sqlalchemy.sql.ddl import CreateTable
@@ -21,7 +23,9 @@ from tests.conftest import Order
         (SQLExpression(CreateTable(Table("some_table", Order.metadata))), SQLExpressionType.UNKNOWN),
     ],
 )
-def test_sql_expression_type_detection(sql_expression: SQLExpression, expected_type: SQLExpressionType | str) -> None:
+def test_sql_expression_type_detection(
+    sql_expression: SQLExpression, expected_type: Union[SQLExpressionType, str]
+) -> None:
     assert sql_expression.type == expected_type
 
 

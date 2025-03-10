@@ -2,7 +2,7 @@ import contextlib
 import sys
 from collections.abc import Mapping
 from types import TracebackType
-from typing import Any
+from typing import Any, Optional
 
 if sys.version_info >= (3, 11):
     from typing import Self
@@ -93,8 +93,8 @@ class SQLAlchemyCaptureContext:
 
     def __exit__(
         self,
-        exc_type: type[BaseException] | None,
-        exc_value: BaseException | None,
-        traceback: TracebackType | None,
-    ) -> None | bool:
+        exc_type: Optional[type[BaseException]],
+        exc_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Optional[bool]:
         return self._sqlaclhemy_events_stack.__exit__(exc_type, exc_value, traceback)

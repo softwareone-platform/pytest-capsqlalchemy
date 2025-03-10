@@ -1,5 +1,6 @@
 import sys
 from types import TracebackType
+from typing import Optional, Union
 
 if sys.version_info >= (3, 11):
     from typing import Self
@@ -25,7 +26,7 @@ class SQLAlchemyCapturer:
     """
 
     _full_test_context: SQLAlchemyCaptureContext
-    _partial_context: SQLAlchemyCaptureContext | None
+    _partial_context: Optional[SQLAlchemyCaptureContext]
 
     def __init__(self, full_test_context: SQLAlchemyCaptureContext):
         self._full_test_context = full_test_context
@@ -60,10 +61,10 @@ class SQLAlchemyCapturer:
 
     def __exit__(
         self,
-        exc_type: type[BaseException] | None = None,
-        exc_val: BaseException | None = None,
-        exc_tb: TracebackType | None = None,
-    ) -> None | bool:
+        exc_type: Optional[type[BaseException]] = None,
+        exc_val: Optional[BaseException] = None,
+        exc_tb: Optional[TracebackType] = None,
+    ) -> Optional[bool]:
         if self._partial_context is None:  # pragma: no cover
             raise RuntimeError(f"{self.__class__.__name__}: attempting to call __exit__ before __enter__")
 
@@ -75,7 +76,7 @@ class SQLAlchemyCapturer:
 
     def assert_query_types(
         self,
-        *expected_query_types: SQLExpressionType | str,
+        *expected_query_types: Union[SQLExpressionType, str],
         include_tcl: bool = True,
     ) -> None:
         """
