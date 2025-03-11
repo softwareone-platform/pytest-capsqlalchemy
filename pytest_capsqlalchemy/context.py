@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from types import TracebackType
 from typing import Any, Optional
 
-if sys.version_info >= (3, 11):
+if sys.version_info >= (3, 11):  # pragma: no cover
     from typing import Self
 else:
     from typing_extensions import Self
