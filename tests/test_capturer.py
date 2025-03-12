@@ -22,6 +22,23 @@ async def test_assert_query_count(db_session: AsyncSession, capsqlalchemy: SQLAl
     capsqlalchemy.assert_query_count(5, include_tcl=False)
 
 
+async def test_assert_max_query_count(db_session: AsyncSession, capsqlalchemy: SQLAlchemyCapturer) -> None:
+    await db_session.execute(text("SELECT 1"))
+    await db_session.execute(select(OrderItem))
+
+    await db_session.commit()
+
+    async with db_session.begin():
+        await db_session.get(Order, 1)
+        await db_session.get(Order, 1)
+        await db_session.execute(select(text("1")))
+
+        db_session.add(Order(recipient="John Doe"))
+
+    capsqlalchemy.assert_max_query_count(9, include_tcl=True)
+    capsqlalchemy.assert_max_query_count(5, include_tcl=False)
+
+
 async def test_changing_context(db_session: AsyncSession, capsqlalchemy: SQLAlchemyCapturer) -> None:
     await db_session.execute(text("SELECT 1"))
 
