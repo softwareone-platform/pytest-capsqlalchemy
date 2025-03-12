@@ -7,7 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-pytest_plugins = ["pytest_capsqlalchemy"]
+pytest_plugins = ["pytester"]
 
 
 def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
