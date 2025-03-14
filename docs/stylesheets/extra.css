@@ -1,0 +1,17 @@
+#logo-light-mode {
+    display: var(--logo-dark-mode-display);
+}
+
+#logo-dark-mode {
+    display: var(--logo-light-mode-display);
+}
+
+[data-md-color-scheme="slate"] {
+    --logo-dark-mode-display: none;
+    --logo-light-mode-display: block;
+}
+
+[data-md-color-scheme="default"] {
+    --logo-dark-mode-display: block;
+    --logo-light-mode-display: none;
+}

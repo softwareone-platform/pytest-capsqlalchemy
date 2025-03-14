@@ -29,6 +29,9 @@ jobs:
       - name: Run type check
         run: uv run mypy
 
+      - name: Check if documentation can be built
+        run: uv run mkdocs build -s
+
   tests:
     services:
       db:
@@ -79,62 +82,20 @@ jobs:
           path: htmlcov
           retention-days: 10
 
-  check-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out
-        uses: actions/checkout@v4
-
-      - name: Set up the environment
-        uses: ./.github/actions/setup-python-env
-
-      - name: Check if documentation can be built
+      - name: Check if documentation can be built for the latest supported version
         run: uv run mkdocs build -s
+        if: ${{ matrix.python-version == '3.13' }}
 
-  sonarqube-scan:
-    runs-on: ubuntu-latest
-    services:
-      db:
-        image: postgres:17
-        env:
-          POSTGRES_DB: test_postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: mysecurepassword
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    steps:
-      - name: Check out
-        uses: actions/checkout@v4
-
-      - name: Set up the environment
-        uses: ./.github/actions/setup-python-env
-        with:
-          python-version: 3.9
-
-      - name: Run tests
-        run: uv run pytest
-        env:
-          TEST_POSTGRES_DB: test_postgres
-          TEST_POSTGRES_USER: postgres
-          TEST_POSTGRES_PASSWORD: mysecurepassword
-          TEST_POSTGRES_HOST: localhost
-          TEST_POSTGRES_PORT: 5432
-
-      - name: SonarQube Scan
+      - name: SonarQube Scan for the lowest supported version
         uses: sonarsource/sonarqube-scan-action@v4
-        if: ${{ !env.ACT }}
+        if: ${{ !env.ACT && matrix.python-version == '3.9' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: SonarQube Quality Gate check
+      - name: SonarQube Quality Gate check for the lowest supported version
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
-        if: ${{ !env.ACT }}
+        if: ${{ !env.ACT && matrix.python-version == '3.9' }}
         with:
           pollingTimeoutSec: 600
         env:
