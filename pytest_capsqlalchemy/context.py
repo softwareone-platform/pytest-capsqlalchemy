@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 if sys.version_info >= (3, 11):  # pragma: no cover
     from typing import Self
-else:
+else:  # pragma: no cover
     from typing_extensions import Self
 
 from sqlalchemy import Connection, CursorResult, Executable, text

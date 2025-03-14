@@ -33,7 +33,7 @@ Repository = "https://github.com/softwareone-platform/pytest-capsqlalchemy"
 Documentation = "https://softwareone-platform.github.io/pytest-capsqlalchemy/"
 
 [project.entry-points.pytest11]
-myproject = "pytest_capsqlalchemy.plugin"
+pytest_capsqlalchemy = "pytest_capsqlalchemy.plugin"
 
 [dependency-groups]
 dev = [
@@ -72,12 +72,13 @@ show_error_codes = true
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
+# NOTE: -p 'no:capsqlalchemy' disables this plugin during tests for accurate code coverage
 addopts = """
   --cov=pytest_capsqlalchemy
   --cov-report=term-missing
   --cov-report=html
   --cov-report=xml
-  --cov-append
+  -p 'no:capsqlalchemy'
 """
 pytester_example_dir = "examples"
 

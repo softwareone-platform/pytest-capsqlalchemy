@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 if sys.version_info >= (3, 11):  # pragma: no cover
     from typing import Self
-else:
+else:  # pragma: no cover
     from typing_extensions import Self
 
 from sqlalchemy.ext.asyncio import AsyncEngine
