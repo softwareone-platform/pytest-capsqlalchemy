@@ -78,9 +78,8 @@ addopts = """
   --cov-report=html
   --cov-report=xml
   --cov-append
-  --ignore=tests/examples
 """
-pytester_example_dir = "tests/examples"
+pytester_example_dir = "examples"
 
 [tool.ruff]
 line-length = 120
