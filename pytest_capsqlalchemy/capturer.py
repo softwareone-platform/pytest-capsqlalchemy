@@ -2,9 +2,9 @@ import sys
 from types import TracebackType
 from typing import Optional, Union
 
-if sys.version_info >= (3, 11):
+if sys.version_info >= (3, 11):  # pragma: no cover
     from typing import Self
-else:
+else:  # pragma: no cover
     from typing_extensions import Self
 
 from sqlalchemy.ext.asyncio import AsyncEngine
@@ -123,16 +123,31 @@ class SQLAlchemyCapturer:
         Raises:
             AssertionError: If the actual query count doesn't match the expected count.
         """
-        actual_query_count = 0
-
-        for query in self.captured_expressions:
-            if not include_tcl and query.type.is_tcl:
-                continue
-
-            actual_query_count += 1
+        actual_query_count = sum(1 for query in self.captured_expressions if include_tcl or not query.type.is_tcl)
 
         assert expected_query_count == actual_query_count, (
             f"Query count mismatch: expected {expected_query_count}, got {actual_query_count}"
+        )
+
+    def assert_max_query_count(self, expected_max_query_count: int, *, include_tcl: bool = True) -> None:
+        """
+        Asserts that the number of captured SQL expressions doesn't exceed the expected count.
+        This is useful for ensuring that your code is not generating more statements than expected
+        (e.g. due to N+1 queries), however the exact number of queries is not important -- for example
+        SQLAlchemy's caching mechanism may generate fewer queries than expected.
+
+        Args:
+            expected_max_query_count: The expected maximum number of SQL expressions.
+            include_tcl: Whether to include transaction control language statements (BEGIN,
+                COMMIT, ROLLBACK) in the count.
+
+        Raises:
+            AssertionError: If the actual query count exceeds the expected maximum count.
+        """
+        actual_query_count = sum(1 for query in self.captured_expressions if include_tcl or not query.type.is_tcl)
+
+        assert expected_max_query_count < actual_query_count, (
+            f"Query count mismatch: expected maximum {expected_max_query_count}, got {actual_query_count}"
         )
 
     def assert_captured_queries(

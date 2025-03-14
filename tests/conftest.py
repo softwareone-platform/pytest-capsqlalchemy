@@ -7,7 +7,12 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-pytest_plugins = ["pytest_capsqlalchemy"]
+# Import the plugin fixtures manually since the plugin is explicitly disabled
+# in pyproject.toml in order to get accurate coverage reports. The fixtures
+# are still useful for the tests, so makes sense to import them here.
+from pytest_capsqlalchemy.plugin import *  # noqa: F403
+
+pytest_plugins = ["pytester"]
 
 
 def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:

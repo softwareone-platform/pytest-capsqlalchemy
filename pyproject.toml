@@ -2,9 +2,7 @@
 name = "pytest-capsqlalchemy"
 version = "0.0.1"
 description = "Pytest plugin to allow capturing SQLAlchemy queries."
-authors = [
-  { name = "SoftwareOne AG" },
-]
+authors = [{ name = "SoftwareOne AG" }]
 readme = "README.md"
 keywords = ['python']
 requires-python = ">=3.9,<4.0"
@@ -33,6 +31,9 @@ dependencies = ["sqlalchemy[asyncio]>=2.0.38"]
 Homepage = "https://softwareone-platform.github.io/pytest-capsqlalchemy/"
 Repository = "https://github.com/softwareone-platform/pytest-capsqlalchemy"
 Documentation = "https://softwareone-platform.github.io/pytest-capsqlalchemy/"
+
+[project.entry-points.pytest11]
+pytest_capsqlalchemy = "pytest_capsqlalchemy.plugin"
 
 [dependency-groups]
 dev = [
@@ -71,7 +72,15 @@ show_error_codes = true
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
-addopts = "--cov=pytest_capsqlalchemy --cov-report=term-missing --cov-report=html --cov-report=xml"
+# NOTE: -p 'no:capsqlalchemy' disables this plugin during tests for accurate code coverage
+addopts = """
+  --cov=pytest_capsqlalchemy
+  --cov-report=term-missing
+  --cov-report=html
+  --cov-report=xml
+  -p 'no:capsqlalchemy'
+"""
+pytester_example_dir = "examples"
 
 [tool.ruff]
 line-length = 120

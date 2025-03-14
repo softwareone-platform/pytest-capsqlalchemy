@@ -27,6 +27,8 @@ theme:
   name: material
   feature:
     tabs: true
+  logo_dark_mode: assets/softwareone-logo-dark-mode.svg
+  logo_light_mode: assets/softwareone-logo-light-mode.svg
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -44,6 +46,10 @@ theme:
         name: Switch to light mode
   icon:
     repo: fontawesome/brands/github
+  custom_dir: docs/templates
+
+extra_css:
+  - stylesheets/extra.css
 
 extra:
   social:
