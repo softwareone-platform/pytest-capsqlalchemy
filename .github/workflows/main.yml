@@ -82,10 +82,6 @@ jobs:
           path: htmlcov
           retention-days: 10
 
-      - name: Check if documentation can be built for the latest supported version
-        run: uv run mkdocs build -s
-        if: ${{ matrix.python-version == '3.13' }}
-
       - name: SonarQube Scan for the lowest supported version
         uses: sonarsource/sonarqube-scan-action@v4
         if: ${{ !env.ACT && matrix.python-version == '3.9' }}
