@@ -44,7 +44,6 @@ class SQLExpression:
                 SQL string will contain placeholders for the bound parameters.
 
         Returns:
-        -------
             The SQL string of the captured expression
         """
         assert isinstance(self.executable, ClauseElement)

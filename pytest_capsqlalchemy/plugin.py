@@ -39,7 +39,6 @@ def capsqlalchemy(capsqlalchemy_context: SQLAlchemyCaptureContext) -> SQLAlchemy
     ```
 
     Returns:
-    -------
         The capturer object with the full test context already set up.
     """
     return SQLAlchemyCapturer(capsqlalchemy_context)
