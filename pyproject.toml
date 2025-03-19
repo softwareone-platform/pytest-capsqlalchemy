@@ -126,6 +126,7 @@ convention = "google"
 
 [tool.ruff.format]
 preview = true
+docstring-code-format = true
 
 [tool.coverage.run]
 branch = true
