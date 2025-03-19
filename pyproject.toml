@@ -87,48 +87,46 @@ line-length = 120
 fix = true
 
 [tool.ruff.lint]
+preview = true # enable linting rules in preview
 select = [
-  # flake8-2020
-  "YTT",
-  # flake8-bandit
-  "S",
-  # flake8-bugbear
-  "B",
-  # flake8-builtins
-  "A",
-  # flake8-comprehensions
-  "C4",
-  # flake8-debugger
-  "T10",
-  # flake8-simplify
-  "SIM",
-  # isort
-  "I",
-  # mccabe
-  "C90",
-  # pycodestyle
-  "E",
-  "W",
-  # pyflakes
-  "F",
-  # pygrep-hooks
-  "PGH",
-  # pyupgrade
-  "UP",
-  # ruff
-  "RUF",
+  "YTT", # flake8-2020
+  "S",   # flake8-bandit
+  "B",   # flake8-bugbear
+  "A",   # flake8-builtins
+  "C4",  # flake8-comprehensions
+  "T10", # flake8-debugger
+  "SIM", # flake8-simplify
+  "I",   # isort
+  "C90", # mccabe
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "PGH", # pygrep-hooks
+  "UP",  # pyupgrade
+  "RUF", # ruff
+  "DOC", # pydoclint
+  "D",   # pydocstyle
 ]
 ignore = [
-  # LineTooLong
-  "E501",
-  # DoNotAssignLambda
-  "E731",
-  # assert
-  "S101",
+  "E731",   # DoNotAssignLambda
+  "S101",   # assert
+  "D100",   # Missing docstring in public module
+  "D104",   # Missing docstring in public package
+  "D105",   # Missing docstring in magic method
+  "DOC402", # yield is not documented in docstring
+  "DOC502", # Raised exception is not explicitly raised
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"examples/*" = ["D", "DOC"]
+"tests/*" = ["D", "DOC"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.ruff.format]
 preview = true
+docstring-code-format = true
 
 [tool.coverage.run]
 branch = true

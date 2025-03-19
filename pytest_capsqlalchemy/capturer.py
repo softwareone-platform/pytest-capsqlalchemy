@@ -14,9 +14,9 @@ from pytest_capsqlalchemy.expression import SQLExpression, SQLExpressionType
 
 
 class SQLAlchemyCapturer:
-    """
-    The main fixture class for the `capsqlalchemy` plugin. Used to perform asserts
-    about the expressions SQLAlchemy has executed during the test.
+    """The main fixture class for the `capsqlalchemy` plugin.
+
+    Used to perform asserts about the expressions SQLAlchemy has executed during the test.
 
     Can be used either directly using the assert methods (to perform checks for all expressions
     executed in the test), as a context manager (to perform checks only for the expressions
@@ -29,17 +29,18 @@ class SQLAlchemyCapturer:
     _partial_context: Optional[SQLAlchemyCaptureContext]
 
     def __init__(self, full_test_context: SQLAlchemyCaptureContext):
+        """Create a new SQLAlchemyCapturer instance."""
         self._full_test_context = full_test_context
         self._partial_context = None
 
     @property
     def engine(self) -> AsyncEngine:
+        """The SQLAlchemy engine instance being captured."""
         return self._full_test_context._engine
 
     @property
     def captured_expressions(self) -> list[SQLExpression]:
-        """
-        Returns all SQL expressions captured in the current context.
+        """Returns all SQL expressions captured in the current context.
 
         When used outside a context manager block, returns all expressions captured
         during the entire test. When used inside a context manager block, returns
@@ -48,7 +49,6 @@ class SQLAlchemyCapturer:
         This property is useful for performing specific assertions on the captured expressions which
         cannot be easily achieved with the provided assert methods.
         """
-
         if self._partial_context is not None:
             return self._partial_context.captured_expressions
 
@@ -79,10 +79,10 @@ class SQLAlchemyCapturer:
         *expected_query_types: Union[SQLExpressionType, str],
         include_tcl: bool = True,
     ) -> None:
-        """
-        Asserts that the captured SQL expressions match the expected query types in order.
+        """Asserts that the captured SQL expressions match the expected query types in order.
+
         This is useful for ensuring that your code is generating correct query types but
-        their exact strcutre is not important (e.g. complex SELECT statements).
+        their exact structure is not important (e.g. complex SELECT statements).
 
         Args:
             *expected_query_types: Variable number of expected query types
@@ -92,7 +92,6 @@ class SQLAlchemyCapturer:
         Raises:
             AssertionError: If the actual query types don't match the expected ones.
         """
-
         actual_query_types_values = []
 
         for query in self.captured_expressions:
@@ -110,8 +109,8 @@ class SQLAlchemyCapturer:
         assert expected_query_types_values == actual_query_types_values
 
     def assert_query_count(self, expected_query_count: int, *, include_tcl: bool = True) -> None:
-        """
-        Asserts that the number of captured SQL expressions matches the expected count.
+        """Asserts that the number of captured SQL expressions matches the expected count.
+
         This is useful for ensuring that your code is not generating more statements than expected
         (e.g. due to N+1 queries), however the exact queries are not important.
 
@@ -130,8 +129,8 @@ class SQLAlchemyCapturer:
         )
 
     def assert_max_query_count(self, expected_max_query_count: int, *, include_tcl: bool = True) -> None:
-        """
-        Asserts that the number of captured SQL expressions doesn't exceed the expected count.
+        """Asserts that the number of captured SQL expressions doesn't exceed the expected count.
+
         This is useful for ensuring that your code is not generating more statements than expected
         (e.g. due to N+1 queries), however the exact number of queries is not important -- for example
         SQLAlchemy's caching mechanism may generate fewer queries than expected.
@@ -156,8 +155,8 @@ class SQLAlchemyCapturer:
         include_tcl: bool = True,
         bind_params: bool = False,
     ) -> None:
-        """
-        Asserts that the captured SQL queries match the expected SQL strings in order.
+        """Asserts that the captured SQL queries match the expected SQL strings in order.
+
         This is useful for ensuring that your code is generating the exact SQL statements you expect.
 
         Args:

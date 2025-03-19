@@ -10,6 +10,7 @@ copyright: <a href="https://softwareone.com">SoftwareOne</a>
 nav:
   - Home: index.md
   - "API Reference": api-reference.md
+
 plugins:
   - search
   - mkdocstrings:
@@ -23,10 +24,14 @@ plugins:
             members_order: source
             show_symbol_type_heading: true
             show_symbol_type_toc: true
+
 theme:
   name: material
   feature:
     tabs: true
+  features:
+    - content.code.copy
+    - content.code.annotate
   logo_dark_mode: assets/softwareone-logo-dark-mode.svg
   logo_light_mode: assets/softwareone-logo-light-mode.svg
   palette:
@@ -63,3 +68,12 @@ markdown_extensions:
       permalink: true
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
