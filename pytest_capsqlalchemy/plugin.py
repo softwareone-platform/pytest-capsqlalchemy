@@ -37,5 +37,9 @@ def capsqlalchemy(capsqlalchemy_context: SQLAlchemyCaptureContext) -> SQLAlchemy
 
         capsqlalchemy.assert_query_count(3, include_tcl=False)
     ```
+
+    Returns:
+    -------
+        The capturer object with the full test context already set up.
     """
     return SQLAlchemyCapturer(capsqlalchemy_context)
