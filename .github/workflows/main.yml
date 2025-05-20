@@ -96,3 +96,34 @@ jobs:
           pollingTimeoutSec: 600
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Compute added/removed lines for notification
+        if: ${{ github.event_name == 'pull_request' && !env.ACT && matrix.python-version == '3.9'}}
+        id: diff
+        run: |
+          PR_DATA=$(gh pr view "${{ github.event.pull_request.number }}" --json additions,deletions -q '.')
+          ADDITIONS=$(echo "$PR_DATA" | jq '.additions')
+          DELETIONS=$(echo "$PR_DATA" | jq '.deletions')
+          echo "additions=$ADDITIONS" >> $GITHUB_OUTPUT
+          echo "deletions=$DELETIONS" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Notify Microsoft Teams
+        if: ${{ github.event_name == 'pull_request' && !env.ACT && matrix.python-version == '3.9'}}
+        uses: softwareone-platform/notify-pr-teams-action@v4
+        with:
+          webhook_url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          bot_image_url: https://raw.githubusercontent.com/softwareone-platform/pytest-capsqlalchemy/main/.github/workflows/assets/turing_team_pr_bot.png
+          repo: ${{ github.repository }}
+          pr_url: ${{ github.event.pull_request.html_url }}
+          pr_title: ${{ github.event.pull_request.title }}
+          pr_author: ${{ github.event.pull_request.user.login }}
+          head_ref: ${{ github.event.pull_request.head.ref }}
+          base_ref: ${{ github.event.pull_request.base.ref }}
+          commits: ${{ github.event.pull_request.commits }}
+          changed_files: ${{ github.event.pull_request.changed_files }}
+          additions: ${{ steps.diff.outputs.additions }}
+          deletions: ${{ steps.diff.outputs.deletions }}
+          pr_number: ${{ github.event.pull_request.number }}
+          pr_status: ${{ github.event.pull_request.state }}
+          is_merged: ${{ github.event.pull_request.merged }}
